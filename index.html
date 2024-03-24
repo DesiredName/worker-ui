@@ -81,7 +81,7 @@
             new Promise((res) => {
                 task(res);
             }).then((res) => {
-                // do something with output
+                console.log(`computed ${res.length} prime numbers`);
             }).finally(() => {
                 window.ui_helper.enable_buttons();
                 window.animation_helper.stop();
