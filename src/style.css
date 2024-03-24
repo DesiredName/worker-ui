@@ -1,0 +1,81 @@
+*,
+*::after,
+*::before {
+    font-family: monospace;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    background-color: #222;
+    color: #ccc;
+}
+
+body {
+    align-content: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    height: 100dvh;
+}
+
+.container {
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 3px #ccc, 0 0 20px #ccc;
+    text-align: center;
+    padding: 2rem 3rem;
+    margin: auto;
+
+    & .title {
+        font-size: 1.8rem;
+    }
+
+    & .counter {
+        padding: 2rem 0 2rem;
+        
+        & .animation {
+            color: #3a3;
+            font-size: 3rem;
+        }
+        
+        & .hint {
+            font-size: 0.7rem;
+        }
+    }
+    
+    & .buttons .button {
+        background-color: transparent;
+        border: none;
+        border-radius: 10px;
+        color: #ccc;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.4rem 0.6rem;
+
+        &:not(:last-child) {
+            margin-right: 0.6rem;
+        }
+
+        &:hover {
+            background-color: rgba(161, 125, 125, 0.4);
+        }
+        
+        &:disabled {
+            background-color: rgba(161, 125, 125, 0.4);
+            cursor: not-allowed;
+        }
+    }
+}
+
+.footer {
+    bottom: 4rem;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+
+    & a {
+        color: #ccc;
+    }
+}

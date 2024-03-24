@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker usage for better UI</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h3 class="title">Worker API for better UI</h3>
+        <div class="counter">
+            <div id="animation" class="animation">
+                <!-- animation -->
+            </div>
+            <span class="hint">
+                Animation time to deliver better UI,
+                <br>
+                while processing the heavy task
+            </span>
+        </div>
+        <div class="buttons">
+            <button name="runner_button" class="button" onclick="do_main_thread()">
+                Main thread
+            </button>
+            <button id="worker_thread" name="runner_button" class="button" onclick="do_worker_thread()">
+                Worker thread
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/Worker" target="_blank">More about Worker API</a>
+    </div>
+
+    <script type="module">
+        import compute_primes from '/src/primes.mjs';
+        import AnimationHelper from '/src/animation.mjs';
+        import UIHelper from '/src/ui.mjs';
+
+        window.task_data = {
+            n: 10000,
+            compute_primes
+        };
+
+        window.animation_helper = AnimationHelper(
+            document.getElementById('animation')
+        );
+
+        window.ui_helper = UIHelper();
+        window.ui_helper.check_worker();
+    </script>
+
+    <script>
+        const worker = new Worker('/src/worker.mjs', { type: 'module' });
+
+        function do_main_thread() {
+            execute((res) => {
+                res(task_data.compute_primes(task_data.n));
+            });
+        }
+
+        function do_worker_thread() {
+            execute((res) => {
+                const result = new ArrayBuffer(task_data.n * 4);
+
+                worker.addEventListener('message', ({ data }) => {
+                    res(new Int32Array(data));
+                });
+
+                worker.postMessage(result, [result]);
+            });
+        }
+
+        function execute(task) {
+            window.ui_helper.disable_buttons();
+            window.animation_helper.start();
+
+            new Promise((res) => {
+                task(res);
+            }).then((res) => {
+                // do something with output
+            }).finally(() => {
+                window.ui_helper.enable_buttons();
+                window.animation_helper.stop();
+            });
+        }
+    </script>
+</body>
+</html>
